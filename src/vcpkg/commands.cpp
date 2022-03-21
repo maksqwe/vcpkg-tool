@@ -13,6 +13,7 @@
 #include <vcpkg/commands.civerifyversions.h>
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.create.h>
+#include <vcpkg/commands.cve-check.h>
 #include <vcpkg/commands.dependinfo.h>
 #include <vcpkg/commands.edit.h>
 #include <vcpkg/commands.env.h>
@@ -88,6 +89,7 @@ namespace vcpkg::Commands
         static const CIClean::CICleanCommand ciclean{};
         static const CIVerifyVersions::CIVerifyVersionsCommand ci_verify_versions{};
         static const Create::CreateCommand create{};
+        static const CveCheckCommand cve_check{};
         static const Edit::EditCommand edit{};
         static const Fetch::FetchCommand fetch{};
         static const FindCommand find_{};
@@ -115,6 +117,7 @@ namespace vcpkg::Commands
             {"autocomplete", &autocomplete},
             {"cache", &cache},
             {"create", &create},
+            {"cve-check", &cve_check},
             {"edit", &edit},
             {"fetch", &fetch},
             {"find", &find_},
