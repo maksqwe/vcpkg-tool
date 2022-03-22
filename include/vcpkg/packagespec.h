@@ -195,9 +195,9 @@ namespace vcpkg
         std::string vendor;
         std::string product;
 
-        bool operator==(const struct CpePackageInfo& other)
+        friend bool operator==(const CpePackageInfo& lhs, const CpePackageInfo& rhs)
         {
-            return vendor == other.vendor && product == other.product;
+            return lhs == rhs;
         }
     };
 
