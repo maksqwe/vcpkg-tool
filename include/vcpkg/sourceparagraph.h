@@ -88,6 +88,10 @@ namespace vcpkg
 
         Json::Object extra_info;
 
+        // Base CPE(Common platform enumeration) info
+        // used to search CVE entries
+        Optional<CpePackageInfo> cpe_info;
+
         Version to_version() const { return Version{raw_version, port_version}; }
 
         friend bool operator==(const SourceParagraph& lhs, const SourceParagraph& rhs);

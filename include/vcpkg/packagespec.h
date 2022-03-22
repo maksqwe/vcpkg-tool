@@ -190,6 +190,17 @@ namespace vcpkg
         ExpectedS<PackageSpec> to_package_spec(Triplet default_triplet) const;
     };
 
+    struct CpePackageInfo
+    {
+        std::string vendor;
+        std::string product;
+
+        bool operator==(const struct CpePackageInfo& other)
+        {
+            return vendor == other.vendor && product == other.product;
+        }
+    };
+
     Optional<std::string> parse_feature_name(Parse::ParserBase& parser);
     Optional<std::string> parse_package_name(Parse::ParserBase& parser);
     ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(StringView input);

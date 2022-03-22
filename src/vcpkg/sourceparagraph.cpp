@@ -130,6 +130,8 @@ namespace vcpkg
 
         if (lhs.extra_info != rhs.extra_info) return false;
 
+        if (lhs.cpe_info != rhs.cpe_info) return false;
+
         return true;
     }
 
@@ -167,6 +169,7 @@ namespace vcpkg
         static const std::string HOMEPAGE = "Homepage";
         static const std::string TYPE = "Type";
         static const std::string SUPPORTS = "Supports";
+        static const std::string CPE_INFO = "CPE-Info";
     }
 
     static Span<const StringView> get_list_of_valid_fields()
@@ -182,6 +185,7 @@ namespace vcpkg
             SourceParagraphFields::TYPE,
             SourceParagraphFields::SUPPORTS,
             SourceParagraphFields::DEFAULT_FEATURES,
+            SourceParagraphFields::CPE_INFO,
         };
 
         return valid_fields;
@@ -407,6 +411,22 @@ namespace vcpkg
             {
                 parser.add_type_error(SourceParagraphFields::SUPPORTS, "a platform expression");
             }
+        }
+
+        buf.clear();
+        parser.optional_field(SourceParagraphFields::CPE_INFO, {buf, textrowcol});
+
+        auto maybe_cpe_info = parse_cpe_info(buf, origin, textrowcol);
+        if (maybe_cpe_info.has_value())
+        {
+            spgh->cpe_info = maybe_cpe_info.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin.to_string();
+            error_info->error = maybe_cpe_info.error();
+            return error_info;
         }
 
         spgh->type = Type::from_string(parser.optional_field(SourceParagraphFields::TYPE));

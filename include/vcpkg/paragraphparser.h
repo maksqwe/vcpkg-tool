@@ -65,4 +65,8 @@ namespace vcpkg::Parse
     ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
                                                                StringView origin = "<unknown>",
                                                                TextRowCol textrowcol = {});
+
+    ExpectedS<CpePackageInfo> parse_cpe_info(const std::string& str,
+                                                               StringView origin = "<unknown>",
+                                                               TextRowCol textrowcol = {});
 }

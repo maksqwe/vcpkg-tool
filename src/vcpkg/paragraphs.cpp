@@ -140,6 +140,30 @@ namespace vcpkg::Parse
 
         return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
     }
+
+    ExpectedS<CpePackageInfo> parse_cpe_info(const std::string& str,
+                                             StringView origin,
+                                             TextRowCol textrowcol)
+    {
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
+
+        auto opt = parse_list_until_eof<Dependency>("dependencies", parser, [](ParserBase& parser) {
+            auto loc = parser.cur_loc();
+            return parse_qualified_specifier(parser).then([&](ParsedQualifiedSpecifier&& pqs) -> Optional<Dependency> {
+                if (pqs.triplet)
+                {
+                    parser.add_error("triplet specifier not allowed in this context", loc);
+                    return nullopt;
+                }
+                return {};
+                //return Dependency{pqs.name, pqs.features.value_or({}), pqs.platform.value_or({})};
+            });
+        });
+        //if (!opt) return {parser.get_error()->format(), expected_right_tag};
+
+        return {};
+        //return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
 }
 
 namespace vcpkg::Paragraphs
