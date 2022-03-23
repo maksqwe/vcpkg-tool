@@ -197,7 +197,7 @@ namespace vcpkg
 
         friend bool operator==(const CpePackageInfo& lhs, const CpePackageInfo& rhs)
         {
-            return lhs == rhs;
+            return lhs.vendor == rhs.vendor && lhs.product == rhs.product;
         }
     };
 

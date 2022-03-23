@@ -1099,6 +1099,7 @@ namespace vcpkg
         constexpr static StringLiteral OVERRIDES = "overrides";
         constexpr static StringLiteral BUILTIN_BASELINE = "builtin-baseline";
         constexpr static StringLiteral VCPKG_CONFIGURATION = "vcpkg-configuration";
+        constexpr static StringLiteral CPE_INFO = "cpe-info";
 
         virtual Span<const StringView> valid_fields() const override
         {
@@ -1119,6 +1120,7 @@ namespace vcpkg
                 OVERRIDES,
                 BUILTIN_BASELINE,
                 VCPKG_CONFIGURATION,
+                CPE_INFO,
             };
             static const auto t = Util::Vectors::concat<StringView>(schemed_deserializer_fields(), u);
 
@@ -1195,6 +1197,29 @@ namespace vcpkg
                 else
                 {
                     spgh->vcpkg_configuration = make_optional(configuration->object());
+                }
+            }
+
+            if (auto cpe_info = obj.get(CPE_INFO))
+            {
+                if (!cpe_info->is_object())
+                {
+                    r.add_generic_error(type_name(), CPE_INFO, " must be an object");
+                }
+                else
+                {
+                    CpePackageInfo cpe;
+                    auto& cpe_obj = cpe_info->object();
+                    if (auto vendor = cpe_obj.get("vendor"))
+                    {
+                        cpe.vendor = vendor->is_string() ? vendor->string().to_string() : std::string();
+                    }
+
+                    if (auto product = cpe_obj.get("product"))
+                    {
+                        cpe.product = product->is_string() ? product->string().to_string() : std::string();
+                    }
+                    spgh->cpe_info = std::move(cpe);
                 }
             }
 
